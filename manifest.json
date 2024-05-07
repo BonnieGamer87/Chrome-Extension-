@@ -1,14 +1,14 @@
 {
   "manifest_version": 3,
   "name": "Website Menu",
-  "version": "1.0",
+  "version": "0.1",
   "description": "A simple Chrome extension to display a menu of websites.",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon16.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
+      "16": "https://i.ibb.co/Xs6Wn1b/16x16icon.png",
+      "48": "https://i.ibb.co/1XH4MjH/48x48icon.png",
+      "128": "https://i.ibb.co/McJrYzZ/128x128icon.png"
     }
   },
   "permissions": ["activeTab"]
