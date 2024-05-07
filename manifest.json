@@ -6,9 +6,9 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "https://i.ibb.co/Xs6Wn1b/16x16icon.png",
-      "48": "https://i.ibb.co/1XH4MjH/48x48icon.png",
-      "128": "https://i.ibb.co/McJrYzZ/128x128icon.png"
+      "16": "16x16icon.png",
+      "48": "48x48icon.png",
+      "128": "128x128icon.png"
     }
   },
   "permissions": ["activeTab"]
