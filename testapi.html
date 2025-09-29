@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <title>Supabase Signup Test</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -11,7 +13,7 @@
     const SUPABASE_URL = 'https://jnwxbuzmmffuhehosahq.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3byE';
 
-    // Use 'createClient' directly, not 'supabase.createClient'
+    // Initialize client correctly — use createClient, NOT supabase.createClient
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function testSignup() {
