@@ -37,7 +37,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const SUPABASE_URL = 'https://jnwxbuzmmffuhehosahq.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3byE';
+      const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
 
       const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -53,6 +53,7 @@
 
       let currentUser = null;
 
+      // Your existing signup logic
       signupBtn.addEventListener('click', async () => {
         const email = emailInput.value;
         const password = passwordInput.value;
@@ -70,6 +71,7 @@
         }
       });
 
+      // Your existing login logic
       loginBtn.addEventListener('click', async () => {
         const email = emailInput.value;
         const password = passwordInput.value;
@@ -144,6 +146,22 @@
           sendBtn.click();
         }
       });
+
+      // Your test signup function added here
+      async function testSignup() {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email: 'testuser@example.com',
+          password: 'password123'
+        });
+        if (error) {
+          console.error('Signup error:', error);
+        } else {
+          console.log('Signup success:', data);
+        }
+      }
+
+      // Call testSignup once on page load - remove or comment out after testing
+      testSignup();
     });
   </script>
 </body>
