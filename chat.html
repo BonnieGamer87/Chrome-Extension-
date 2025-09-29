@@ -4,6 +4,19 @@
   <meta charset="UTF-8" />
   <title>Supabase Chat Starter</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    #messages div {
+      margin-bottom: 8px;
+      padding: 6px;
+      border-radius: 4px;
+      background-color: #f1f1f1;
+    }
+  </style>
 </head>
 <body>
   <h1>Supabase Chat Demo</h1>
@@ -44,21 +57,37 @@
     signupBtn.addEventListener('click', async () => {
       const email = emailInput.value;
       const password = passwordInput.value;
-      const { user, error } = await supabase.auth.signUp({ email, password });
-      if (error) alert(error.message);
-      else alert('Check your email to confirm signup!');
+      if (!email || !password) {
+        alert('Please enter email and password');
+        return;
+      }
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        alert(error.message);
+      } else {
+        alert('Check your email to confirm signup!');
+        emailInput.value = '';
+        passwordInput.value = '';
+      }
     });
 
     // Log in user
     loginBtn.addEventListener('click', async () => {
       const email = emailInput.value;
       const password = passwordInput.value;
+      if (!email || !password) {
+        alert('Please enter email and password');
+        return;
+      }
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) alert(error.message);
-      else {
+      if (error) {
+        alert(error.message);
+      } else {
         currentUser = data.user;
         authDiv.style.display = 'none';
         chatDiv.style.display = 'block';
+        emailInput.value = '';
+        passwordInput.value = '';
         startListeningForMessages();
       }
     });
@@ -113,6 +142,13 @@
       }
 
       messageInput.value = '';
+    });
+
+    // Optional: allow pressing Enter to send message
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendBtn.click();
+      }
     });
   </script>
 </body>
