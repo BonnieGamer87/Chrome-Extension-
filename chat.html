@@ -1,2 +1,119 @@
-const SUPABASE_URL = 'https://jnwxbuzmmffuhehosahq.supabase.co'; // your project URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3by'; // your anon key
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Supabase Chat Starter</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h1>Supabase Chat Demo</h1>
+
+  <div id="auth">
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="signup">Sign Up</button>
+    <button id="login">Log In</button>
+  </div>
+
+  <div id="chat" style="display:none;">
+    <div id="messages" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
+    <input type="text" id="message-input" placeholder="Type a message" />
+    <button id="send">Send</button>
+  </div>
+
+  <script>
+    // Replace with your own Supabase URL and anon key
+    const SUPABASE_URL = 'https://jnwxbuzmmffuhehosahq.supabase.co'; // your project URL
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3by'; // your anon key
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const authDiv = document.getElementById('auth');
+    const chatDiv = document.getElementById('chat');
+    const messagesDiv = document.getElementById('messages');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const signupBtn = document.getElementById('signup');
+    const loginBtn = document.getElementById('login');
+    const messageInput = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send');
+
+    let currentUser = null;
+
+    // Sign up user
+    signupBtn.addEventListener('click', async () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      const { user, error } = await supabase.auth.signUp({ email, password });
+      if (error) alert(error.message);
+      else alert('Check your email to confirm signup!');
+    });
+
+    // Log in user
+    loginBtn.addEventListener('click', async () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) alert(error.message);
+      else {
+        currentUser = data.user;
+        authDiv.style.display = 'none';
+        chatDiv.style.display = 'block';
+        startListeningForMessages();
+      }
+    });
+
+    // Listen for new messages
+    function startListeningForMessages() {
+      fetchMessages();
+
+      supabase
+        .channel('public:messages')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
+          console.log('Change received!', payload);
+          fetchMessages();
+        })
+        .subscribe();
+    }
+
+    // Fetch and display messages
+    async function fetchMessages() {
+      let { data: messages, error } = await supabase
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      messagesDiv.innerHTML = '';
+      messages.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        msgDiv.textContent = `${msg.user_email}: ${msg.content}`;
+        messagesDiv.appendChild(msgDiv);
+      });
+
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // Send message
+    sendBtn.addEventListener('click', async () => {
+      const content = messageInput.value.trim();
+      if (!content) return;
+
+      const { error } = await supabase.from('messages').insert([
+        { user_email: currentUser.email, content }
+      ]);
+
+      if (error) {
+        alert('Error sending message: ' + error.message);
+        return;
+      }
+
+      messageInput.value = '';
+    });
+  </script>
+</body>
+</html>
