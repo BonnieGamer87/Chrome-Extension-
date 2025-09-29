@@ -2,40 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Supabase Auth Test</title>
-  <!-- Supabase JS SDK v2 -->
+  <title>Supabase Minimal Test</title>
+  <!-- Load Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 </head>
 <body>
   <h1>Supabase Signup Test</h1>
-  <button id="signup-btn">Sign Up testuser@example.com</button>
-  <pre id="output"></pre>
 
   <script>
-    // Put your Supabase project URL and anon key here:
+    // Your Supabase project info here
     const SUPABASE_URL = 'https://jnwxbuzmmffuhehosahq.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3byE'; // <-- Replace this with your anon key
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3byE';
 
-    // Initialize Supabase client
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Create client correctly (capital S)
+    const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const output = document.getElementById('output');
-    const signupBtn = document.getElementById('signup-btn');
-
-    signupBtn.addEventListener('click', async () => {
-      output.textContent = 'Signing up...';
-
+    async function testSignup() {
       const { data, error } = await supabase.auth.signUp({
         email: 'testuser@example.com',
         password: 'password123'
       });
-
       if (error) {
-        output.textContent = 'Signup error:\n' + JSON.stringify(error, null, 2);
+        console.error('Signup error:', error);
+        alert('Signup failed: ' + error.message);
       } else {
-        output.textContent = 'Signup success:\n' + JSON.stringify(data, null, 2);
+        console.log('Signup success:', data);
+        alert('Signup success! Check your email to confirm.');
       }
-    });
+    }
+
+    // Run the test signup after page loads
+    window.onload = () => {
+      testSignup();
+    };
   </script>
 </body>
 </html>
