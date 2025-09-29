@@ -4,21 +4,28 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+  <h1>Supabase Signup Test</h1>
+  <pre id="output"></pre>
+
   <script>
     const SUPABASE_URL = 'https://jnwxbuzmmffuhehosahq.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3byE';
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Use 'createClient' directly, not 'supabase.createClient'
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function testSignup() {
+      const output = document.getElementById('output');
+
       const { data, error } = await supabase.auth.signUp({
         email: 'testuser@example.com',
         password: 'password123'
       });
+
       if (error) {
-        console.error('Signup error:', error);
+        output.textContent = 'Signup error: ' + JSON.stringify(error, null, 2);
       } else {
-        console.log('Signup success:', data);
+        output.textContent = 'Signup success: ' + JSON.stringify(data, null, 2);
       }
     }
 
