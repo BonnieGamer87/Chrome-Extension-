@@ -2,22 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Supabase Signup Test</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>Supabase Auth Test</title>
+  <!-- Supabase JS SDK v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 </head>
 <body>
   <h1>Supabase Signup Test</h1>
+  <button id="signup-btn">Sign Up testuser@example.com</button>
   <pre id="output"></pre>
 
   <script>
+    // Put your Supabase project URL and anon key here:
     const SUPABASE_URL = 'https://jnwxbuzmmffuhehosahq.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3byE';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impud3hidXptbWZmdWhlaG9zYWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNjI1MzQsImV4cCI6MjA3NDczODUzNH0.j4KIUCBTTKDHQmY_D3BKU5nyBnrVFrdmr3xBSlF3byE'; // <-- Replace this with your anon key
 
-    // Initialize client correctly — use createClient, NOT supabase.createClient
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Initialize Supabase client
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    async function testSignup() {
-      const output = document.getElementById('output');
+    const output = document.getElementById('output');
+    const signupBtn = document.getElementById('signup-btn');
+
+    signupBtn.addEventListener('click', async () => {
+      output.textContent = 'Signing up...';
 
       const { data, error } = await supabase.auth.signUp({
         email: 'testuser@example.com',
@@ -25,13 +31,11 @@
       });
 
       if (error) {
-        output.textContent = 'Signup error: ' + JSON.stringify(error, null, 2);
+        output.textContent = 'Signup error:\n' + JSON.stringify(error, null, 2);
       } else {
-        output.textContent = 'Signup success: ' + JSON.stringify(data, null, 2);
+        output.textContent = 'Signup success:\n' + JSON.stringify(data, null, 2);
       }
-    }
-
-    testSignup();
+    });
   </script>
 </body>
 </html>
